@@ -146,6 +146,8 @@ def fetch_data() -> tuple[pd.DataFrame | None, list[str] | None]:
     if not pdf_links:
         return None, ["No PDF decision reports found on the page."]
 
+    pdf_links = pdf_links[:1]  # Latest report only
+
     all_frames = []
     period_labels = []
     for item in pdf_links:
