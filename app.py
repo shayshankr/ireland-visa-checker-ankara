@@ -188,14 +188,6 @@ with st.expander("ℹ️ How to use this tool"):
     7. #irelandvisaresult #ireland #AIforgood #studentinireland #irelandeducation #NCIcollege #NCI
     """)
 
-# ── Error fallback ────────────────────────────────────────────────────────────
-with st.expander("⚠️ If any error click on me"):
-    st.markdown(f"""
-    1. Visit the [original website]({BASE_URL}) and download the file.
-    2. Mostly the error is due to the file not being available on the server.
-       Once the embassy website has the file, this application will work.
-    """)
-
 with st.spinner("Loading latest visa decisions…"):
     df, meta = fetch_data()
 
@@ -298,6 +290,14 @@ st.download_button(
 
 # with st.expander("Browse first 100 decisions"):
 #     st.markdown(df_to_html_table(df.head(100)), unsafe_allow_html=True)
+
+# ── Error fallback ────────────────────────────────────────────────────────────
+with st.expander("⚠️ If any error click on me"):
+    st.markdown(f"""
+    1. Visit the [original website]({BASE_URL}) and download the file.
+    2. Mostly the error is due to the file not being available on the server.
+       Once the embassy website has the file, this application will work.
+    """)
 
 st.caption(
     "Data refreshes every hour. "
