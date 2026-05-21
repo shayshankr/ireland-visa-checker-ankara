@@ -176,6 +176,26 @@ def fetch_data() -> tuple[pd.DataFrame | None, list[str] | None]:
 st.title("🇮🇪 Ireland Visa Decision Checker")
 st.caption("Ankara Embassy · Data sourced from ireland.ie")
 
+# ── How to use ────────────────────────────────────────────────────────────────
+with st.expander("ℹ️ How to use this tool"):
+    st.markdown("""
+    1. Enter your 8-digit application number like `83276171` or with prefix `IRL83276171`
+    2. Get instant status check.
+    3. See nearest processed numbers if yours isn't found.
+    4. Please share with your family and friends this application.
+    5. More than 4130+ people have used this application as of April 2026. Last week usage 200 people.
+    6. Contact the developer if any issues while using this application.
+    7. #irelandvisaresult #ireland #AIforgood #studentinireland #irelandeducation #NCIcollege #NCI
+    """)
+
+# ── Error fallback ────────────────────────────────────────────────────────────
+with st.expander("⚠️ If any error click on me"):
+    st.markdown(f"""
+    1. Visit the [original website]({BASE_URL}) and download the file.
+    2. Mostly the error is due to the file not being available on the server.
+       Once the embassy website has the file, this application will work.
+    """)
+
 with st.spinner("Loading latest visa decisions…"):
     df, meta = fetch_data()
 
