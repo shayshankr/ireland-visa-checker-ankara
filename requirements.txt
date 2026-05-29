@@ -3,3 +3,6 @@ requests
 pandas
 beautifulsoup4
 pdfplumber
+PyMuPDF
+pytesseract
+Pillow
