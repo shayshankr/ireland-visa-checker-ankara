@@ -81,18 +81,28 @@ def parse_pdf(content: bytes) -> pd.DataFrame:
 
     # ── Attempt 2: OCR fallback for image/scanned PDFs ────────────────────────
     try:
-        import fitz  # pymupdf
+        import fitz
         import pytesseract
         from PIL import Image
         import io as _io
         import re
+        import subprocess
+
+        # Auto-detect tesseract path
+        for candidate in ["/usr/bin/tesseract", "/usr/local/bin/tesseract"]:
+            try:
+                subprocess.run([candidate, "--version"], capture_output=True, timeout=5)
+                pytesseract.pytesseract.tesseract_cmd = candidate
+                break
+            except Exception:
+                continue
 
         doc = fitz.open(stream=content, filetype="pdf")
         for page in doc:
-            mat = fitz.Matrix(2.5, 2.5)  # 180 DPI equivalent — fast + accurate
+            mat = fitz.Matrix(2.5, 2.5)
             pix = page.get_pixmap(matrix=mat)
             img = Image.open(_io.BytesIO(pix.tobytes("png")))
-            text = pytesseract.image_to_string(img, config="--psm 6")
+            text = pytesseract.image_to_string(img, lang="eng", config="--psm 6")
             for line in text.splitlines():
                 line = line.strip()
                 m = re.match(r'^(\d{7,9})\s+(Approved|Refused|Granted|Rejected)', line, re.IGNORECASE)
@@ -102,7 +112,7 @@ def parse_pdf(content: bytes) -> pd.DataFrame:
                         "Decision": m.group(2).capitalize()
                     })
     except Exception:
-        pass  # OCR not available — return empty
+        pass
 
     return pd.DataFrame(rows)
 
