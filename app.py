@@ -146,8 +146,7 @@ def fetch_data() -> tuple[pd.DataFrame | None, list[str] | None]:
     if not pdf_links:
         return None, ["No PDF decision reports found on the page."]
 
-    pdf_links = pdf_links[:1]  # Latest report only
-
+    # Try each PDF in order — skip image-based (scanned) PDFs that return no data
     all_frames = []
     period_labels = []
     for item in pdf_links:
@@ -158,11 +157,12 @@ def fetch_data() -> tuple[pd.DataFrame | None, list[str] | None]:
             if not df_part.empty:
                 all_frames.append(df_part)
                 period_labels.append(item["label"])
+                break  # Use the first PDF that has parseable data
         except Exception:
             continue
 
     if not all_frames:
-        return None, ["Could not parse any PDF files."]
+        return None, ["Could not parse any PDF files. The embassy may have published a scanned/image PDF this week. Please try again later."]
 
     df = pd.concat(all_frames, ignore_index=True)
     df.drop_duplicates(subset=["Application Number"], keep="last", inplace=True)
